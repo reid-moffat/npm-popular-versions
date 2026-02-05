@@ -12,7 +12,7 @@ const LIMIT = 10;
 
 try {
     const response = await fetch(
-        `https://api.npmjs.org/versions/${packageName}/last-week`
+        `https://api.npmjs.org/versions/${packageName.replaceAll('/', '%2F')}/last-week`
     );
 
     if (!response.ok) {
