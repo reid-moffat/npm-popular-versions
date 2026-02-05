@@ -28,7 +28,7 @@
     "type-check": "tsc --noEmit",
     "all-checks": "pnpm run lint && pnpm run format && pnpm run type-check",
     "build": "tsup bin/cli.js --format cjs,esm --dts --minify --clean",
-    "test": "pnpm run build && pnpm run loadTS && mocha",
+    "test": "mocha",
     "deployHelp": "echo 1) Run 'changeset' 2) Merge changes to main 3) Merge changeset PR 4) pnpm run deploy (verify it looks good)",
     "deploy": "git checkout main && git pull && pnpm run build && pnpm publish",
     "loadTS": "cross-env TS_NODE_PROJECT='./tsconfig.json'"
