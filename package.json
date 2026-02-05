@@ -1,0 +1,85 @@
+{
+  "name": "npm-popular-versions",
+  "version": "1.0.0",
+  "description": "Shows the most popular versions of an NPM package",
+  "author": "Reid Moffat <reid.moffat9@gmail.com>",
+  "license": "MIT",
+  "keywords": [
+    "npm",
+    "popular",
+    "version",
+    "versions",
+    "popular-package",
+    "downloads",
+    "version-download",
+    "version-downloads",
+    "package-download",
+    "package-downloads"
+  ],
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "type-check": "tsc --noEmit",
+    "all-checks": "pnpm run lint && pnpm run format && pnpm run type-check",
+    "build": "tsup src/index.ts --format cjs,esm --dts --minify --clean",
+    "test": "pnpm run build && pnpm run loadTS && mocha",
+    "deployHelp": "echo 1) Run 'changeset' 2) Merge changes to main 3) Merge changeset PR 4) pnpm run deploy (verify it looks good)",
+    "deploy": "git checkout main && git pull && pnpm run build && pnpm publish",
+    "loadTS": "cross-env TS_NODE_PROJECT='./tsconfig.json'"
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "package.json"
+  ],
+  "devDependencies": {
+    "@changesets/cli": "^2.29.8",
+    "@eslint/js": "^9.39.2",
+    "@eslint/markdown": "^7.5.1",
+    "@types/chai": "^5.2.3",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.2.1",
+    "@types/stringify-object": "^4.0.5",
+    "chai": "^6.2.2",
+    "cross-env": "^10.1.0",
+    "eslint": "^9.39.2",
+    "generate-arrays": "^2.0.0",
+    "globals": "^17.3.0",
+    "jiti": "^2.6.1",
+    "mocha": "^11.7.5",
+    "prettier": "3.8.1",
+    "stringify-object": "^6.0.0",
+    "suite-metrics": "^2.5.0",
+    "test-inputs": "^1.4.0",
+    "ts-node": "^10.9.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reid-moffat/npm-popular-versions"
+  },
+  "homepage": "https://www.npmjs.com/package/npm-popular-versions?activeTab=readme",
+  "funding": {
+    "type": "buymeacoffee",
+    "url": "https://buymeacoffee.com/reidmoffat"
+  },
+  "bugs": "https://github.com/reid-moffat/npm-popular-versions/issues",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false,
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "microtime"
+    ]
+  },
+  "packageManager": "pnpm@10.20.0"
+}
