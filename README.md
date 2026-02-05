@@ -12,7 +12,7 @@ Shows the most popular versions of an NPM package
 ```bash
 npx npm-popular-versions
 
-# or 
+# or
 pnpm dlx npm-popular-versions
 
 # or
