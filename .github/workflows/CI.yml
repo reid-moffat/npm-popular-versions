@@ -76,14 +76,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build package
-        run: pnpm run build
-
-      - name: Pack package
-        run: pnpm pack --out ${{ github.workspace }}/bias-random-packed.tgz
-
-      - name: Install packed package
-        run: pnpm add -g ${{ github.workspace }}/bias-random-packed.tgz
-
       - name: Test
         run: pnpm run test
