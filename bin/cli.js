@@ -21,15 +21,32 @@ try {
 
     const data = await response.json();
 
-    const sorted = Object.entries(data.downloads)
-        .sort(([, a], [, b]) => b - a)
-        .slice(0, LIMIT);
+    const entries = Object.entries(data.downloads);
+    const sorted = [];
+
+    for (const entry of entries) {
+        const downloads = entry[1];
+
+        // Skip if items == LIMIT and this one isn't bigger than the smallest
+        if (sorted.length >= LIMIT && downloads <= sorted[LIMIT - 1][1]) {
+            continue;
+        }
+
+        let i = 0;
+        while (i < sorted.length && sorted[i][1] > downloads) {
+            i++;
+        }
+        sorted.splice(i, 0, entry);
+
+        if (sorted.length > LIMIT) {
+            sorted.pop();
+        }
+    }
 
     console.log(`\nTop ${LIMIT} versions of ${packageName} (last week):`);
     sorted.forEach(([version, downloads], index) => {
         console.log(`${index + 1}: ${version.padEnd(30)} ${downloads.toLocaleString()} downloads`);
     });
-
 } catch (error) {
     console.error(`Error fetching data: ${error.message}`);
     process.exit(1);
