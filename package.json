@@ -31,7 +31,8 @@
     "test": "mocha",
     "deployHelp": "echo 1) Run 'changeset' 2) Merge changes to main 3) Merge changeset PR 4) pnpm run deploy (verify it looks good)",
     "deploy": "git checkout main && git pull && pnpm run build && pnpm publish",
-    "loadTS": "cross-env TS_NODE_PROJECT='./tsconfig.json'"
+    "loadTS": "cross-env TS_NODE_PROJECT='./tsconfig.json'",
+    "prepare": "husky"
   },
   "files": [
     "dist",
@@ -54,6 +55,7 @@
     "eslint": "^9.39.2",
     "generate-arrays": "^2.0.0",
     "globals": "^17.3.0",
+    "husky": "^9.1.7",
     "jiti": "^2.6.1",
     "mocha": "^11.7.5",
     "prettier": "3.8.1",
