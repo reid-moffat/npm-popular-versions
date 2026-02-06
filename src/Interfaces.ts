@@ -1,9 +1,9 @@
 interface CommandInputs {
     packageName: string;
+    outputCount: number;
     outputJson: boolean;
     outputSimple: boolean;
     outputFile: string | undefined;
-    outputCount: number;
 }
 
 interface NpmApiResponse {

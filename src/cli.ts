@@ -23,10 +23,10 @@ async function main() {
         .action(async (packageName: string, options) => {
             const inputs: CommandInputs = {
                 packageName,
+                outputCount: options.number,
                 outputJson: options.json,
                 outputSimple: options.simple,
                 outputFile: options.output,
-                outputCount: options.number,
             };
 
             validateInputs(inputs);
