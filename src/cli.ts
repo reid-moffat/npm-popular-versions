@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import getPopularVersions from './getPopularVersions.ts';
+import { CommandInputs } from './Interfaces.ts';
+import validateInputs from './validation.ts';
 
 async function main() {
     const program = new Command();
@@ -20,12 +22,14 @@ async function main() {
             const outputFile: string | undefined = options.output;
             const outputCount: number = options.number;
 
-            console.log({
+            const inputs: CommandInputs = {
                 packageName,
                 outputJson,
                 outputFile,
                 outputCount,
-            });
+            };
+
+            validateInputs(inputs);
 
             const output = await getPopularVersions(packageName, outputCount);
             console.log(JSON.stringify(output, null, 4));
