@@ -45,7 +45,9 @@ try {
 
     console.log(`\nTop ${LIMIT} versions of ${packageName} (last week):`);
     sorted.forEach(([version, downloads], index) => {
-        console.log(`${(`${index + 1}:`).padEnd(3)} ${version.padEnd(25)} ${downloads.toLocaleString()} downloads`);
+        console.log(
+            `${`${index + 1}:`.padEnd(3)} ${version.padEnd(25)} ${downloads.toLocaleString()} downloads`
+        );
     });
 } catch (error) {
     console.error(`Error fetching data: ${error.message}`);
