@@ -19,6 +19,9 @@ pnpm dlx npm-popular-versions
 yarn dlx npm-popular-versions
 ```
 
+Note: Download counts on npm include all HTTP 200 responses (mirrors, bots, ci, etc), so take small values especially
+with a grain of salt. More info [here](https://blog.npmjs.org/post/92574016600/numeric-precision-matters-how-npm-download-counts-work.html)
+
 ## 📃 Changelog
 
 To view the release notes for each version, view the changelog:
