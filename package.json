@@ -17,7 +17,7 @@
     "package-downloads"
   ],
   "bin": {
-    "npm-popular-versions": "dist/cli.ts"
+    "npm-popular-versions": "./dist/cli.js"
   },
   "type": "module",
   "scripts": {
@@ -26,7 +26,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "type-check": "tsc --noEmit",
-    "build": "tsup src/cli.ts --format cjs,esm --dts --minify --clean",
+    "build": "tsup src/cli.ts --format esm --minify --clean",
     "test": "mocha",
     "deployHelp": "echo 1) Run 'changeset' 2) Merge changes to main 3) Merge changeset PR 4) pnpm run deploy (verify it looks good)",
     "deploy": "git checkout main && git pull && pnpm run build && pnpm publish",
