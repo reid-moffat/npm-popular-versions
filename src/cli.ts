@@ -17,8 +17,8 @@ async function main() {
     program
         .argument('<packageName>', 'Package name (required)')
         .option('-n, --number <count>', 'Number of versions to output', parseInt, 10)
-        .option('-j, --json', 'Output JSON instead of a formatted table', false)
-        .option('-s, --simple', 'Minimal plain-text output instead of a formatted table', false)
+        .option('--json', 'Output JSON instead of a formatted table', false)
+        .option('--simple', 'Minimal plain-text output instead of a formatted table', false)
         .option('-o, --output <file>', 'Write output to a file instead of stdout')
         .action(async (packageName: string, options) => {
             const inputs: CommandInputs = {
@@ -36,7 +36,7 @@ async function main() {
                 options.number
             );
 
-            outputData(output);
+            outputData(output, inputs);
         });
 
     program.allowExcessArguments(false); // Max 1 package name
