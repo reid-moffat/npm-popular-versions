@@ -5,7 +5,7 @@ function outputData(output: VersionDownloads, inputs: CommandInputs) {
     if (inputs.outputJson) {
         formattedOutput = jsonOutput(output, inputs.packageName);
     } else if (inputs.outputSimple) {
-        formattedOutput = simpleOutput(output, inputs.packageName);
+        formattedOutput = simpleOutput(output, inputs);
     } else {
         formattedOutput = tableOutput(output, inputs.packageName);
     }
@@ -30,10 +30,10 @@ function jsonOutput(output: VersionDownloads, packageName: string) {
     return JSON.stringify(outputJson, null, 4);
 }
 
-function simpleOutput(output: VersionDownloads, packageName: string) {
+function simpleOutput(output: VersionDownloads, inputs: CommandInputs) {
     let outputString: string = '\n';
 
-    outputString += `Top 10 versions of ${packageName} (last week):\n`;
+    outputString += `Top ${inputs.outputCount} versions of ${inputs.packageName} (last week):\n`;
     let rank = 1;
     for (const [key, value] of output) {
         outputString += `${(rank + ':').toString().padEnd(3)}  ${key.toString().padEnd(20)} ${value}\n`;
