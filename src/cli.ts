@@ -1,4 +1,20 @@
 #!/usr/bin/env node
+import { Command } from 'commander';
+
+async function main() {
+    const program = new Command();
+
+    program
+        .name('npm-popular-versions')
+        .description('Gets the most popular versions of a Node.js package')
+        .version('1.0.0');
+
+    program.parse();
+
+    await program.parseAsync(process.argv);
+}
+
+main();
 
 const packageName: string = process.argv[2];
 
