@@ -1,7 +1,7 @@
 # PNPM packages
 node_modules/
 
-# Transpiled, minified excutable
+# Transpiled, minified executable
 bin/
 
 # Claude settings
