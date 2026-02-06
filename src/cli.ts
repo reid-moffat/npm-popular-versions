@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const packageName = process.argv[2];
+const packageName: string = process.argv[2];
 
 if (!packageName) {
     console.error('Usage: npm-popular-versions <package-name>');
@@ -11,7 +11,7 @@ if (!packageName) {
 const LIMIT = 10;
 
 try {
-    const response = await fetch(
+    const response: Response = await fetch(
         `https://api.npmjs.org/versions/${packageName.replaceAll('/', '%2F')}/last-week`
     );
 
