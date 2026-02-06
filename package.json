@@ -1,6 +1,6 @@
 {
   "name": "npm-popular-versions",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Shows the most popular versions of an NPM package",
   "author": "Reid Moffat <reid.moffat9@gmail.com>",
   "license": "MIT",
