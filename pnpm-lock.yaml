@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      commander:
+        specifier: ^14.0.3
+        version: 14.0.3
     devDependencies:
       '@changesets/cli':
         specifier: ^2.29.8
@@ -32,9 +36,6 @@ importers:
       chai:
         specifier: ^6.2.2
         version: 6.2.2
-      commander:
-        specifier: ^14.0.3
-        version: 14.0.3
       cross-env:
         specifier: ^10.1.0
         version: 10.1.0
