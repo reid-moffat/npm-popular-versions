@@ -5,7 +5,8 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write  # Commits version changes + creates tags
+  pull-requests: write  # Creates a changeset PR
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
