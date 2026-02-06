@@ -1,6 +1,6 @@
-import { CommandInputs } from './Interfaces.ts';
+import { CommandInputs, VersionDownloads } from './Interfaces.ts';
 
-function outputData(output: [string, number][], inputs: CommandInputs) {
+function outputData(output: VersionDownloads, inputs: CommandInputs) {
     let formattedOutput;
     if (inputs.outputJson) {
         formattedOutput = jsonOutput(output, inputs.packageName);
@@ -17,7 +17,7 @@ function outputData(output: [string, number][], inputs: CommandInputs) {
     }
 }
 
-function jsonOutput(output: [string, number][], packageName: string) {
+function jsonOutput(output: VersionDownloads, packageName: string) {
     const outputJson: { package: string; topVersions: { [key: string]: number } } = {
         package: packageName,
         topVersions: {},
@@ -30,7 +30,7 @@ function jsonOutput(output: [string, number][], packageName: string) {
     return JSON.stringify(outputJson, null, 4);
 }
 
-function simpleOutput(output: [string, number][], packageName: string) {
+function simpleOutput(output: VersionDownloads, packageName: string) {
     let outputString: string = '\n';
 
     outputString += `Top 10 versions of ${packageName} (last week):\n`;
@@ -43,7 +43,7 @@ function simpleOutput(output: [string, number][], packageName: string) {
     return outputString;
 }
 
-function tableOutput(output: [string, number][], packageName: string) {
+function tableOutput(output: VersionDownloads, packageName: string) {
     let outputString: string = '\n';
 
     outputString += `Package: ${packageName}`;

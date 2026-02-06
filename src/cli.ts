@@ -2,7 +2,7 @@
 
 import { Command } from 'commander';
 import getPopularVersions from './getPopularVersions.ts';
-import { CommandInputs } from './Interfaces.ts';
+import { CommandInputs, VersionDownloads } from './Interfaces.ts';
 import validateInputs from './validation.ts';
 import outputData from './output.ts';
 
@@ -31,10 +31,7 @@ async function main() {
 
             validateInputs(inputs);
 
-            const output: [string, number][] = await getPopularVersions(
-                packageName,
-                options.number
-            );
+            const output: VersionDownloads = await getPopularVersions(packageName, options.number);
 
             outputData(output, inputs);
         });

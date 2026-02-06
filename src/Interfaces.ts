@@ -13,4 +13,6 @@ interface NpmApiResponse {
     };
 }
 
-export { CommandInputs, NpmApiResponse };
+type VersionDownloads = [string, number][];
+
+export { CommandInputs, NpmApiResponse, VersionDownloads };

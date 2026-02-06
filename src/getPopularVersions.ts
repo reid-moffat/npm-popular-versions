@@ -1,4 +1,4 @@
-import { NpmApiResponse } from './Interfaces.ts';
+import { NpmApiResponse, VersionDownloads } from './Interfaces.ts';
 
 async function getPopularVersions(packageName: string, count: number) {
     const versionData: NpmApiResponse = await getVersions(packageName);
@@ -26,8 +26,8 @@ async function getVersions(packageName: string) {
 }
 
 function filterByPopularity(versions: { [key: string]: number }, count: number) {
-    const entries: [string, number][] = Object.entries(versions);
-    const sorted: [string, number][] = [];
+    const entries: VersionDownloads = Object.entries(versions);
+    const sorted: VersionDownloads = [];
 
     for (const entry of entries) {
         const downloads: number = entry[1];
