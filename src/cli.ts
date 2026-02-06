@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/src/env node
 
 const packageName = process.argv[2];
 
@@ -19,24 +19,24 @@ try {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data: { package: string; downloads: { [key: string]: number } } = await response.json();
 
-    const entries = Object.entries(data.downloads);
-    const sorted = [];
+    const entries: [string, number][] = Object.entries(data.downloads);
+    const sorted: [string, number][] = [];
 
     for (const entry of entries) {
-        const downloads = entry[1];
+        const downloads: number = entry[1];
 
         // Skip if items == LIMIT and this one isn't bigger than the smallest
         if (sorted.length >= LIMIT && downloads <= sorted[LIMIT - 1][1]) {
             continue;
         }
 
-        let i = 0;
+        let i: number = 0;
         while (i < sorted.length && sorted[i][1] > downloads) {
             i++;
         }
-        sorted.splice(i, 0, entry);
+        sorted.splice(i, 0, entry as [string, number]);
 
         if (sorted.length > LIMIT) {
             sorted.pop();
@@ -49,7 +49,8 @@ try {
             `${`${index + 1}:`.padEnd(3)} ${version.padEnd(25)} ${downloads.toLocaleString()} downloads`
         );
     });
-} catch (error) {
-    console.error(`Error fetching data: ${error.message}`);
+} catch (error: unknown) {
+    const message: string = error instanceof Error ? error.message : String(error);
+    console.error(`Error fetching data: ${message}`);
     process.exit(1);
 }
