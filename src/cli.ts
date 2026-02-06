@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import { Command } from 'commander';
 import getPopularVersions from './getPopularVersions.ts';
 import { CommandInputs } from './Interfaces.ts';

@@ -5,4 +5,11 @@ interface CommandInputs {
     outputCount: number;
 }
 
-export { CommandInputs };
+interface NpmApiResponse {
+    package: string;
+    downloads: {
+        [key: string]: number;
+    };
+}
+
+export { CommandInputs, NpmApiResponse };

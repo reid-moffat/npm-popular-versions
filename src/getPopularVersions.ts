@@ -1,7 +1,7 @@
-async function getPopularVersions(packageName: string, count: number) {
-    const versionData: { package: string; downloads: { [key: string]: number } } =
-        await getVersions(packageName);
+import { NpmApiResponse } from './Interfaces.ts';
 
+async function getPopularVersions(packageName: string, count: number) {
+    const versionData: NpmApiResponse = await getVersions(packageName);
     return filterByPopularity(versionData.downloads, count);
 }
 
@@ -15,8 +15,7 @@ async function getVersions(packageName: string) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
-        const versionData: { package: string; downloads: { [key: string]: number } } =
-            await response.json();
+        const versionData: NpmApiResponse = await response.json();
 
         return versionData;
     } catch (error: unknown) {
