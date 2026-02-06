@@ -18,20 +18,16 @@ async function main() {
         .option('--json', 'Output JSON instead of a table', false)
         .option('-o, --output <file>', 'Write output to a file instead of stdout')
         .action(async (packageName: string, options) => {
-            const outputJson: boolean = options.json;
-            const outputFile: string | undefined = options.output;
-            const outputCount: number = options.number;
-
             const inputs: CommandInputs = {
                 packageName,
-                outputJson,
-                outputFile,
-                outputCount,
+                outputJson: options.json,
+                outputFile: options.output,
+                outputCount: options.number,
             };
 
             validateInputs(inputs);
 
-            const output = await getPopularVersions(packageName, outputCount);
+            const output = await getPopularVersions(packageName, options.number);
             console.log(JSON.stringify(output, null, 4));
         });
 
