@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  format:
+  Format:
     runs-on: 'ubuntu-latest'
     timeout-minutes: 5
 
@@ -30,7 +30,7 @@ jobs:
       - name: Run prettier
         run: pnpm run format:check
 
-  lint:
+  Lint:
     runs-on: 'ubuntu-latest'
     timeout-minutes: 5
 
@@ -52,7 +52,7 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
-  test:
+  Test:
     name: Test - ${{ matrix.platform.name }} - ${{ matrix.node-version }}
     runs-on: ${{ matrix.platform.os }}
     strategy:
