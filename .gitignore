@@ -4,6 +4,9 @@ node_modules/
 # Transpiled, minified excutable
 bin/
 
+# Claude settings
+.claude/
+
 
 #
 # Webstorm .idea files
