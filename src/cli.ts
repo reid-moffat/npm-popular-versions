@@ -9,7 +9,25 @@ async function main() {
         .description('Gets the most popular versions of a Node.js package')
         .version('1.0.0');
 
-    program.parse();
+    program
+        .argument('<packageName>', 'Package name (required)')
+        .option('-n, --number <count>', 'Number of versions to output', parseInt, 10)
+        .option('--json', 'Output JSON instead of a table', false)
+        .option('-o, --output <file>', 'Write output to a file instead of stdout')
+        .action((packageName: string, options) => {
+            const outputJson: boolean = options.json;
+            const outputFile: string | undefined = options.output;
+            const outputCount: number = options.number;
+
+            console.log({
+                packageName,
+                outputJson,
+                outputFile,
+                outputCount,
+            });
+        });
+
+    program.allowExcessArguments(false); // Max 1 package name
 
     await program.parseAsync(process.argv);
 }
