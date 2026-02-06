@@ -1,4 +1,4 @@
-#!/usr/src/env node
+#!/usr/bin/env node
 
 const packageName = process.argv[2];
 
