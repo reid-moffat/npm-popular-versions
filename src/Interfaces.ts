@@ -1,6 +1,7 @@
 interface CommandInputs {
     packageName: string;
     outputJson: boolean;
+    outputSimple: boolean;
     outputFile: string | undefined;
     outputCount: number;
 }

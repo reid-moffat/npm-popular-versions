@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import getPopularVersions from './getPopularVersions.ts';
 import { CommandInputs } from './Interfaces.ts';
 import validateInputs from './validation.ts';
+import outputData from './output.ts';
 
 async function main() {
     const program = new Command();
@@ -16,20 +17,26 @@ async function main() {
     program
         .argument('<packageName>', 'Package name (required)')
         .option('-n, --number <count>', 'Number of versions to output', parseInt, 10)
-        .option('--json', 'Output JSON instead of a table', false)
+        .option('-j, --json', 'Output JSON instead of a formatted table', false)
+        .option('-s, --simple', 'Minimal plain-text output instead of a formatted table', false)
         .option('-o, --output <file>', 'Write output to a file instead of stdout')
         .action(async (packageName: string, options) => {
             const inputs: CommandInputs = {
                 packageName,
                 outputJson: options.json,
+                outputSimple: options.simple,
                 outputFile: options.output,
                 outputCount: options.number,
             };
 
             validateInputs(inputs);
 
-            const output = await getPopularVersions(packageName, options.number);
-            console.log(JSON.stringify(output, null, 4));
+            const output: [string, number][] = await getPopularVersions(
+                packageName,
+                options.number
+            );
+
+            outputData(output);
         });
 
     program.allowExcessArguments(false); // Max 1 package name
