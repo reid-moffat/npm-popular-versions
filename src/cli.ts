@@ -36,12 +36,6 @@ main();
 
 const packageName: string = process.argv[2];
 
-if (!packageName) {
-    console.error('Usage: npm-popular-versions <package-name>');
-    console.error('E.g. pnpm dlx npm-popular-versions firebase');
-    process.exit(1);
-}
-
 const LIMIT = 10;
 
 try {
