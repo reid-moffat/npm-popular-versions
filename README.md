@@ -7,7 +7,9 @@
 
 Shows the most popular versions of an NPM package
 
-## 📦 Installation
+## 📦 Running
+
+Run via CLI with your preferred package manager:
 
 ```bash
 npx npm-popular-versions
@@ -17,6 +19,9 @@ pnpm dlx npm-popular-versions
 
 # or
 yarn dlx npm-popular-versions
+
+# or
+bunx npm-popular-versions
 ```
 
 Note: Download counts on npm include all HTTP 200 responses (mirrors, bots, ci, etc), so take small values especially
