@@ -74,27 +74,45 @@ jobs:
       - name: Type check
         run: pnpm run type-check
 
-  Test:
-    name: Test - ${{ matrix.platform.name }} - ${{ matrix.node-version }}
+  CLI-Test:
+    name: Test - ${{ matrix.package-manager.name }} - ${{ matrix.platform.name }} - Node v${{ matrix.node-version }}
     runs-on: ${{ matrix.platform.os }}
     strategy:
       fail-fast: false
       matrix:
-        node-version:
-          - '18.x'
-          - '20.x'
-          - '22.x'
-          - '24.x'
         platform:
           - name: Linux
             os: 'ubuntu-latest'
           - name: Windows
             os: 'windows-latest'
-          - name: Mac
+          - name: MacOS
             os: 'macos-latest'
-    timeout-minutes: 5
+          - name: MacOS-13
+            os: 'macos-13' # Intel
+        node-version:
+          - '18.x'
+          - '20.x'
+          - '22.x'
+          - '24.x'
+        package-manager:
+          - name: npm
+            install: 'npm install -g'
+          - name: pnpm
+            install: 'pnpm add -g'
+            setup: 'corepack enable && corepack prepare pnpm@latest --activate'
+          - name: yarn
+            install: 'yarn global add'
+            setup: 'corepack enable'
+          - name: bun
+            install: 'bun install -g'
+            setup-action: 'oven-sh/setup-bun@v2'
+        exclude:
+          - package-manager: { name: bun }
+            node: 18
+    timeout-minutes: 10
 
     steps:
+      # Setup package
       - name: Checkout code
         uses: actions/checkout@v6
 
@@ -109,5 +127,43 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Test
-        run: pnpm run test
+      # Build and pack package as tarball
+      - name: Build package
+        run: pnpm run build
+
+      - name: Pack package
+        run: pnpm pack --out ./npm-popular-versions.tgz
+
+      # Setup package manager if needed
+      - name: Setup ${{ matrix.package-manager.name }}
+        if: matrix.package-manager.setup
+        run: ${{ matrix.package-manager.setup }}
+
+      - name: Setup Bun
+        if: matrix.package-manager.setup-action
+        uses: ${{ matrix.package-manager.setup-action }}
+
+      # Install packed tarball globally
+      - name: Install CLI globally
+        shell: bash
+        run: |
+          TARBALL=./npm-popular-versions.tgz
+          ${{ matrix.package-manager.install }} "$TARBALL"
+
+      # Test installed CLI
+      - name: Test CLI - Version
+        run: npm-popular-versions --version
+
+      - name: Test CLI - Help
+        run: npm-popular-versions --help
+
+      - name: Test CLI - Basic functionality
+        run: npm-popular-versions firebase
+
+      # Test in a fresh directory (like an end user)
+      - name: Test in isolated directory
+        shell: bash
+        run: |
+          mkdir -p /tmp/test-isolated
+          cd /tmp/test-isolated
+          npm-popular-versions firebase
