@@ -132,7 +132,7 @@ jobs:
         run: pnpm run build
 
       - name: Pack package
-        run: pnpm pack --out "$GITHUB_WORKSPACE/npm-popular-versions.tgz"
+        run: pnpm pack
 
       # Setup package manager if needed
       - name: Setup ${{ matrix.package-manager.name }}
@@ -147,7 +147,7 @@ jobs:
       - name: Install CLI globally
         shell: bash
         run: |
-          TARBALL="$GITHUB_WORKSPACE/npm-popular-versions.tgz"
+          TARBALL="$GITHUB_WORKSPACE/$(ls *.tgz)"
           # Move to a temp directory for a more accurate simulation (no repo pakcage.json in the way)
           cd /tmp
           ${{ matrix.package-manager.install }} "$TARBALL"
