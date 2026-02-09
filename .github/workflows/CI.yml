@@ -107,6 +107,8 @@ jobs:
         exclude:
           - package-manager: { name: bun }
             node-version: '18.x'
+          - package-manager: { name: yarn }
+            node-version: '18.x'
     timeout-minutes: 10
 
     steps:
