@@ -108,7 +108,7 @@ jobs:
             setup-action: 'oven-sh/setup-bun@v2'
         exclude:
           - package-manager: { name: bun }
-            node: 18
+            node-version: '18.x'
     timeout-minutes: 10
 
     steps:
