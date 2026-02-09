@@ -5,6 +5,7 @@ import getPopularVersions from './getPopularVersions.ts';
 import { CommandInputs, VersionDownloads } from './Interfaces.ts';
 import validateInputs from './validation.ts';
 import outputData from './output.ts';
+import packageJson from '../package.json' with { type: 'json' };
 
 async function main() {
     const program = new Command();
@@ -12,7 +13,7 @@ async function main() {
     program
         .name('npm-popular-versions')
         .description('Gets the most popular versions of a Node.js package')
-        .version('1.0.0');
+        .version(packageJson.version);
 
     program
         .argument('<packageName>', 'Package name (required)')
