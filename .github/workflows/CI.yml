@@ -136,11 +136,11 @@ jobs:
 
       # Setup package manager if needed
       - name: Setup ${{ matrix.package-manager.name }}
-        if: matrix.package-manager.setup
+        if: ${{ matrix.package-manager.setup }}
         run: ${{ matrix.package-manager.setup }}
 
       - name: Setup Bun
-        if: matrix.package-manager.setup-action
+        if: ${{ matrix.package-manager.setup-action }}
         uses: ${{ matrix.package-manager.setup-action }}
 
       # Install packed tarball globally
