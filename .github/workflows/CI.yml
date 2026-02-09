@@ -146,6 +146,8 @@ jobs:
         shell: bash
         run: |
           TARBALL="$GITHUB_WORKSPACE/npm-popular-versions.tgz"
+          # Move to a temp directory for a more accurate simulation (no repo pakcage.json in the way)
+          cd /tmp
           ${{ matrix.package-manager.install }} "$TARBALL"
 
       # Test installed CLI
