@@ -1,3 +1,5 @@
+import { writeFileSync } from 'node:fs';
+import { extname } from 'node:path';
 import { CommandInputs, VersionDownloads } from './Interfaces.ts';
 
 /**
@@ -14,7 +16,12 @@ function outputData(output: VersionDownloads, inputs: CommandInputs) {
     }
 
     if (inputs.outputFile) {
-        // TODO
+        let filePath: string = inputs.outputFile;
+        if (!extname(filePath)) {
+            filePath += inputs.outputJson ? '.json' : '.txt';
+        }
+        writeFileSync(filePath, formattedOutput);
+        console.log(`Output written to ${filePath}`);
     } else {
         console.log(formattedOutput);
     }
@@ -30,7 +37,7 @@ function standardOutput(output: VersionDownloads, packageName: string) {
         ...output.map(([, d]) => d.toLocaleString().length)
     );
 
-    let outputString: string = '\n';
+    let outputString: string = '';
     outputString += `Package: ${packageName}\n`;
     outputString += `Top ${output.length} versions (last week):\n`;
 
@@ -50,7 +57,7 @@ function standardOutput(output: VersionDownloads, packageName: string) {
         rank++;
     }
 
-    outputString += separator + '\n';
+    outputString += separator;
 
     return outputString;
 }
@@ -75,11 +82,11 @@ function jsonOutput(output: VersionDownloads, packageName: string) {
  * Simple output (--simple flag) -> simple header and lines with version & downloads
  */
 function simpleOutput(output: VersionDownloads, inputs: CommandInputs) {
-    let outputString: string = '\n';
+    let outputString: string = '';
 
-    outputString += `Top ${inputs.outputCount} versions of ${inputs.packageName} (last week):\n`;
+    outputString += `Top ${inputs.outputCount} versions of ${inputs.packageName} (last week):`;
     for (const [key, value] of output) {
-        outputString += `${key.toString().padEnd(10)} ${value}\n`;
+        outputString += `\n${key.toString().padEnd(10)} ${value}`;
     }
 
     return outputString;
