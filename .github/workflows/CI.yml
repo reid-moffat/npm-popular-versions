@@ -87,8 +87,6 @@ jobs:
             os: 'windows-latest'
           - name: MacOS
             os: 'macos-latest'
-          - name: MacOS-13
-            os: 'macos-13' # Intel
         node-version:
           - '18.x'
           - '20.x'
