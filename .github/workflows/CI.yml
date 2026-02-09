@@ -347,6 +347,9 @@ jobs:
       - name: Setup Bun
         run: npm install -g bun
 
+      - name: Add Bun bin to PATH
+        run: echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
       - name: Install CLI globally
         shell: bash
         run: |
