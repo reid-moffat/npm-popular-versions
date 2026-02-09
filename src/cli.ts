@@ -22,19 +22,27 @@ async function main() {
         .option('--simple', 'Minimal plain-text output instead of a formatted table', false)
         .option('-o, --output <file>', 'Write output to a file instead of stdout')
         .action(async (packageName: string, options) => {
-            const inputs: CommandInputs = {
-                packageName,
-                outputCount: options.number,
-                outputJson: options.json,
-                outputSimple: options.simple,
-                outputFile: options.output,
-            };
+            try {
+                const inputs: CommandInputs = {
+                    packageName,
+                    outputCount: options.number,
+                    outputJson: options.json,
+                    outputSimple: options.simple,
+                    outputFile: options.output,
+                };
 
-            validateInputs(inputs);
+                validateInputs(inputs);
 
-            const output: VersionDownloads = await getPopularVersions(packageName, options.number);
+                const output: VersionDownloads = await getPopularVersions(
+                    packageName,
+                    options.number
+                );
 
-            outputData(output, inputs);
+                outputData(output, inputs);
+            } catch (error) {
+                console.error('Error:', error instanceof Error ? error.message : String(error));
+                process.exit(1);
+            }
         });
 
     program.allowExcessArguments(false); // Max 1 package name
@@ -42,4 +50,7 @@ async function main() {
     await program.parseAsync(process.argv);
 }
 
-main();
+main().catch((error) => {
+    console.error('Error:', error instanceof Error ? error.message : String(error));
+    process.exit(1);
+});
