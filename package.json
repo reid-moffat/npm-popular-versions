@@ -29,6 +29,7 @@
     "build": "tsup src/cli.ts --format esm --minify --clean --shims --out-dir bin",
     "installLocal": "node scripts/install-local.js",
     "test": "pnpm run installLocal && vitest",
+    "test:ci": "vitest",
     "deployHelp": "echo 1) Run 'changeset' 2) Merge changes to main 3) Merge changeset PR 4) pnpm run deploy (verify it looks good)",
     "deploy": "git checkout main && git pull && pnpm run build && pnpm publish",
     "prepare": "husky"
