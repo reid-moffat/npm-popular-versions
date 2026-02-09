@@ -74,8 +74,8 @@ jobs:
       - name: Type check
         run: pnpm run type-check
 
-  CLI-Test:
-    name: Test - ${{ matrix.package-manager.name }} - ${{ matrix.platform.name }} - Node v${{ matrix.node-version }}
+  Test-NPM:
+    name: Test - ${{ matrix.platform.name }} - Node v${{ matrix.node-version }}
     runs-on: ${{ matrix.platform.os }}
     needs: [Format, Lint, Typecheck]
     strategy:
@@ -93,23 +93,152 @@ jobs:
           - '20.x'
           - '22.x'
           - '24.x'
-        package-manager:
-          - name: npm
-            install: 'npm install -g'
-          - name: pnpm
-            install: 'pnpm add -g'
-            setup: 'corepack enable && corepack prepare pnpm@latest --activate'
-          - name: yarn
-            install: 'yarn global add'
-            setup: 'corepack enable'
-          - name: bun
-            install: 'bun install -g'
-            setup-action: 'oven-sh/setup-bun@v2'
-        exclude:
-          - package-manager: { name: bun }
-            node-version: '18.x'
-          - package-manager: { name: yarn }
-            node-version: '18.x'
+    timeout-minutes: 10
+
+    steps:
+      # Setup package
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Build and pack package as tarball
+      - name: Build package
+        run: pnpm run build
+
+      - name: Pack package
+        run: pnpm pack
+
+      # Install packed tarball globally
+      - name: Install CLI globally
+        shell: bash
+        run: |
+          TARBALL="$GITHUB_WORKSPACE/$(ls *.tgz)"
+          # Move to a temp directory for a more accurate simulation (no repo pakcage.json in the way)
+          cd /tmp
+          npm install -g "$TARBALL"
+
+      # Test installed CLI
+      - name: Test CLI - Version
+        run: npm-popular-versions --version
+
+      - name: Test CLI - Help
+        run: npm-popular-versions --help
+
+      - name: Test CLI - Basic functionality
+        run: npm-popular-versions firebase
+
+      # Test in a fresh directory (like an end user)
+      - name: Test in isolated directory
+        shell: bash
+        run: |
+          mkdir -p /tmp/test-isolated
+          cd /tmp/test-isolated
+          npm-popular-versions firebase
+
+  Test-PNPM:
+    name: Test - ${{ matrix.platform.name }} - Node v${{ matrix.node-version }}
+    runs-on: ${{ matrix.platform.os }}
+    needs: [Format, Lint, Typecheck]
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - name: Linux
+            os: 'ubuntu-latest'
+          - name: Windows
+            os: 'windows-latest'
+          - name: MacOS
+            os: 'macos-latest'
+        node-version:
+          - '18.x'
+          - '20.x'
+          - '22.x'
+          - '24.x'
+    timeout-minutes: 10
+
+    steps:
+      # Setup package
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Build and pack package as tarball
+      - name: Build package
+        run: pnpm run build
+
+      - name: Pack package
+        run: pnpm pack
+
+      # Setup pnpm for running
+      - name: Setup pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
+
+      # Install packed tarball globally
+      - name: Install CLI globally
+        shell: bash
+        run: |
+          TARBALL="$GITHUB_WORKSPACE/$(ls *.tgz)"
+          # Move to a temp directory for a more accurate simulation (no repo pakcage.json in the way)
+          cd /tmp
+          pnpm add -g "$TARBALL"
+
+      # Test installed CLI
+      - name: Test CLI - Version
+        run: npm-popular-versions --version
+
+      - name: Test CLI - Help
+        run: npm-popular-versions --help
+
+      - name: Test CLI - Basic functionality
+        run: npm-popular-versions firebase
+
+      # Test in a fresh directory (like an end user)
+      - name: Test in isolated directory
+        shell: bash
+        run: |
+          mkdir -p /tmp/test-isolated
+          cd /tmp/test-isolated
+          npm-popular-versions firebase
+
+  Test-Yarn:
+    name: Test ${{ matrix.platform.name }} - Node v${{ matrix.node-version }}
+    runs-on: ${{ matrix.platform.os }}
+    needs: [Format, Lint, Typecheck]
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - name: Linux
+            os: 'ubuntu-latest'
+          - name: Windows
+            os: 'windows-latest'
+          - name: MacOS
+            os: 'macos-latest'
+        node-version:
+          # Note: Node v18 is incompatible with yarn's global cli
+          - '20.x'
+          - '22.x'
+          - '24.x'
     timeout-minutes: 10
 
     steps:
@@ -136,12 +265,93 @@ jobs:
         run: pnpm pack
 
       # Setup package manager if needed
-      - name: Setup ${{ matrix.package-manager.name }}
-        if: ${{ matrix.package-manager.setup }}
-        run: ${{ matrix.package-manager.setup }}
+      - name: Setup yarn
+        run: corepack enable
 
+      # Install packed tarball globally
+      - name: Install CLI globally
+        shell: bash
+        run: |
+          TARBALL="$GITHUB_WORKSPACE/$(ls *.tgz)"
+          # Move to a temp directory for a more accurate simulation (no repo pakcage.json in the way)
+          cd /tmp
+          yarn global add "$TARBALL"
+
+      # Yarn needs global bin in PATH on Windows
+      - name: Add Yarn bin to PATH (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          # Avoids package.json locally
+          mkdir /tmp
+          cd /tmp
+          $yarnBin = yarn global bin
+          echo "$yarnBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      # Test installed CLI
+      - name: Test CLI - Version
+        run: npm-popular-versions --version
+
+      - name: Test CLI - Help
+        run: npm-popular-versions --help
+
+      - name: Test CLI - Basic functionality
+        run: npm-popular-versions firebase
+
+      # Test in a fresh directory (like an end user)
+      - name: Test in isolated directory
+        shell: bash
+        run: |
+          mkdir -p /tmp/test-isolated
+          cd /tmp/test-isolated
+          npm-popular-versions firebase
+
+  Test-Bun:
+    name: Test - ${{ matrix.package-manager.name }} - ${{ matrix.platform.name }} - Node v${{ matrix.node-version }}
+    runs-on: ${{ matrix.platform.os }}
+    needs: [Format, Lint, Typecheck]
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - name: Linux
+            os: 'ubuntu-latest'
+          - name: Windows
+            os: 'windows-latest'
+          - name: MacOS
+            os: 'macos-latest'
+        node-version:
+          - '18.x'
+          - '20.x'
+          - '22.x'
+          - '24.x'
+    timeout-minutes: 10
+
+    steps:
+      # Setup package
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Build and pack package as tarball
+      - name: Build package
+        run: pnpm run build
+
+      - name: Pack package
+        run: pnpm pack
+
+      # Setup package manager if needed
       - name: Setup Bun
-        if: matrix.package-manager.name == 'bun'
         uses: oven-sh/setup-bun@v2
 
       # Install packed tarball globally
@@ -151,18 +361,7 @@ jobs:
           TARBALL="$GITHUB_WORKSPACE/$(ls *.tgz)"
           # Move to a temp directory for a more accurate simulation (no repo pakcage.json in the way)
           cd /tmp
-          ${{ matrix.package-manager.install }} "$TARBALL"
-
-      # Yarn needs global bin in PATH on Windows
-      - name: Add Yarn bin to PATH (Windows)
-        if: runner.os == 'Windows' && matrix.package-manager.name == 'yarn'
-        shell: pwsh
-        run: |
-          # Avoids package.json locally
-          mkdir /tmp
-          cd /tmp
-          $yarnBin = yarn global bin
-          echo "$yarnBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          bun install -g "$TARBALL"
 
       # Test installed CLI
       - name: Test CLI - Version
