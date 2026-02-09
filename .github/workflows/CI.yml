@@ -140,8 +140,8 @@ jobs:
         run: ${{ matrix.package-manager.setup }}
 
       - name: Setup Bun
-        if: ${{ matrix.package-manager.setup-action }}
-        uses: ${{ matrix.package-manager.setup-action }}
+        if: matrix.package-manager.name == 'bun'
+        uses: oven-sh/setup-bun@v2
 
       # Install packed tarball globally
       - name: Install CLI globally
