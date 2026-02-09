@@ -1,5 +1,8 @@
 import { CommandInputs, VersionDownloads } from './Interfaces.ts';
 
+/**
+ * Formats and outputs the package versions with the specified format
+ */
 function outputData(output: VersionDownloads, inputs: CommandInputs) {
     let formattedOutput;
     if (inputs.outputJson) {
@@ -17,9 +20,15 @@ function outputData(output: VersionDownloads, inputs: CommandInputs) {
     }
 }
 
+/**
+ * Standard output (no flag) -> makes a table
+ */
 function standardOutput(output: VersionDownloads, packageName: string) {
-    const versionColWidth = Math.max(7, ...output.map(([v]) => v.length));
-    const downloadsColWidth = Math.max(9, ...output.map(([, d]) => d.toLocaleString().length));
+    const versionColWidth: number = Math.max(7, ...output.map(([v]) => v.length));
+    const downloadsColWidth: number = Math.max(
+        9,
+        ...output.map(([, d]) => d.toLocaleString().length)
+    );
 
     let outputString: string = '\n';
     outputString += `Package: ${packageName}\n`;
@@ -34,9 +43,9 @@ function standardOutput(output: VersionDownloads, packageName: string) {
 
     let rank: number = 1;
     for (const [version, downloads] of output) {
-        const rankStr = rank.toString().padEnd(4);
-        const versionStr = version.padEnd(versionColWidth);
-        const downloadsStr = downloads.toLocaleString().padStart(downloadsColWidth);
+        const rankStr: string = rank.toString().padEnd(4);
+        const versionStr: string = version.padEnd(versionColWidth);
+        const downloadsStr: string = downloads.toLocaleString().padStart(downloadsColWidth);
         outputString += `| ${rankStr} | ${versionStr} | ${downloadsStr} |\n`;
         rank++;
     }
@@ -46,6 +55,9 @@ function standardOutput(output: VersionDownloads, packageName: string) {
     return outputString;
 }
 
+/**
+ * JSON output (--json flag) -> makes a simple JSON object
+ */
 function jsonOutput(output: VersionDownloads, packageName: string) {
     const outputJson: { package: string; topVersions: { [key: string]: number } } = {
         package: packageName,
@@ -59,14 +71,15 @@ function jsonOutput(output: VersionDownloads, packageName: string) {
     return JSON.stringify(outputJson, null, 4);
 }
 
+/**
+ * Simple output (--simple flag) -> simple header and lines with version & downloads
+ */
 function simpleOutput(output: VersionDownloads, inputs: CommandInputs) {
     let outputString: string = '\n';
 
     outputString += `Top ${inputs.outputCount} versions of ${inputs.packageName} (last week):\n`;
-    let rank = 1;
     for (const [key, value] of output) {
-        outputString += `${(rank + ':').toString().padEnd(3)}  ${key.toString().padEnd(20)} ${value}\n`;
-        rank++;
+        outputString += `${key.toString().padEnd(10)} ${value}\n`;
     }
 
     return outputString;
