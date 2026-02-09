@@ -345,7 +345,7 @@ jobs:
 
       # Setup bun and install tarball globally
       - name: Setup Bun
-        run: pnpm install -g bun --ignore-scripts=false
+        run: npm install -g bun
 
       - name: Install CLI globally
         shell: bash
