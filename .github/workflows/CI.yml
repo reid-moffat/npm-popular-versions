@@ -350,16 +350,15 @@ jobs:
       - name: Pack package
         run: pnpm pack
 
-      # Setup package manager if needed
+      # Setup bun and install tarball globally
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+        uses: npm install -g bun
 
-      # Install packed tarball globally
       - name: Install CLI globally
         shell: bash
         run: |
           TARBALL="$GITHUB_WORKSPACE/$(ls *.tgz)"
-          # Move to a temp directory for a more accurate simulation (no repo pakcage.json in the way)
+          # Move to a temp directory for a more accurate simulation (no repo package.json in the way)
           cd /tmp
           bun install -g "$TARBALL"
 
