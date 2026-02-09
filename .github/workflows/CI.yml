@@ -127,16 +127,6 @@ jobs:
           cd /tmp
           npm install -g "$TARBALL"
 
-      # Test installed CLI
-      - name: Test CLI - Version
-        run: npm-popular-versions --version
-
-      - name: Test CLI - Help
-        run: npm-popular-versions --help
-
-      - name: Test CLI - Basic functionality
-        run: npm-popular-versions firebase
-
       # Test in a fresh directory (like an end user)
       - name: Test in isolated directory
         shell: bash
@@ -144,6 +134,9 @@ jobs:
           mkdir -p /tmp/test-isolated
           cd /tmp/test-isolated
           npm-popular-versions firebase
+
+      - name: Test CLI
+        run: npm run test:ci
 
   Test-PNPM:
     name: Test - ${{ matrix.platform.name }} - Node v${{ matrix.node-version }}
@@ -352,7 +345,7 @@ jobs:
 
       # Setup bun and install tarball globally
       - name: Setup Bun
-        uses: npm install -g bun
+        run: pnpm install -g bun
 
       - name: Install CLI globally
         shell: bash
