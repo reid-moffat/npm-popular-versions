@@ -13,6 +13,7 @@ try {
 
     const tarball = path.resolve('./npm-popular-versions.tgz');
     run(`pnpm add -g "${tarball}"`);
+    run(`rm -r "${tarball}"`);
 
     console.log('\n✓ Successfully installed globally');
 } catch (error) {
