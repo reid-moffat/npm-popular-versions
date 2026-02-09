@@ -1,3 +1,6 @@
+/**
+ * CLI input options from commander
+ */
 interface CommandInputs {
     packageName: string;
     outputCount: number;
@@ -6,6 +9,9 @@ interface CommandInputs {
     outputFile: string | undefined;
 }
 
+/**
+ * The response format from NPM's API
+ */
 interface NpmApiResponse {
     package: string;
     downloads: {
@@ -13,6 +19,9 @@ interface NpmApiResponse {
     };
 }
 
+/**
+ * List of package versions and their downloads
+ */
 type VersionDownloads = [string, number][];
 
 export { CommandInputs, NpmApiResponse, VersionDownloads };
