@@ -152,6 +152,14 @@ jobs:
           cd /tmp
           ${{ matrix.package-manager.install }} "$TARBALL"
 
+      # Yarn needs global bin in PATH on Windows
+      - name: Add Yarn bin to PATH (Windows)
+        if: runner.os == 'Windows' && matrix.package-manager.name == 'yarn'
+        shell: pwsh
+        run: |
+          $yarnBin = yarn global bin
+          echo "$yarnBin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
       # Test installed CLI
       - name: Test CLI - Version
         run: npm-popular-versions --version
