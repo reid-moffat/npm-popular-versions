@@ -3,8 +3,7 @@ import { execSync } from 'child_process';
 import path from 'path';
 
 function run(cmd) {
-    console.log(`> ${cmd}`);
-    execSync(cmd, { stdio: 'inherit' });
+    execSync(cmd, { stdio: ['ignore', 'ignore', 'inherit'] });
 }
 
 try {
