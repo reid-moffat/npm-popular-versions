@@ -7,7 +7,7 @@ function outputData(output: VersionDownloads, inputs: CommandInputs) {
     } else if (inputs.outputSimple) {
         formattedOutput = simpleOutput(output, inputs);
     } else {
-        formattedOutput = tableOutput(output, inputs.packageName);
+        formattedOutput = standardOutput(output, inputs.packageName);
     }
 
     if (inputs.outputFile) {
@@ -15,6 +15,35 @@ function outputData(output: VersionDownloads, inputs: CommandInputs) {
     } else {
         console.log(formattedOutput);
     }
+}
+
+function standardOutput(output: VersionDownloads, packageName: string) {
+    const versionColWidth = Math.max(7, ...output.map(([v]) => v.length));
+    const downloadsColWidth = Math.max(9, ...output.map(([, d]) => d.toLocaleString().length));
+
+    let outputString: string = '\n';
+    outputString += `Package: ${packageName}\n`;
+    outputString += `Top ${output.length} versions (last week):\n`;
+
+    const header = `| ${'#'.padEnd(4)} | ${'Version'.padEnd(versionColWidth)} | ${'Downloads'.padStart(downloadsColWidth)} |`;
+    const separator = `|${'-'.repeat(6)}|${'-'.repeat(versionColWidth + 2)}|${'-'.repeat(downloadsColWidth + 2)}|`;
+
+    outputString += separator + '\n';
+    outputString += header + '\n';
+    outputString += separator + '\n';
+
+    let rank: number = 1;
+    for (const [version, downloads] of output) {
+        const rankStr = rank.toString().padEnd(4);
+        const versionStr = version.padEnd(versionColWidth);
+        const downloadsStr = downloads.toLocaleString().padStart(downloadsColWidth);
+        outputString += `| ${rankStr} | ${versionStr} | ${downloadsStr} |\n`;
+        rank++;
+    }
+
+    outputString += separator + '\n';
+
+    return outputString;
 }
 
 function jsonOutput(output: VersionDownloads, packageName: string) {
@@ -39,14 +68,6 @@ function simpleOutput(output: VersionDownloads, inputs: CommandInputs) {
         outputString += `${(rank + ':').toString().padEnd(3)}  ${key.toString().padEnd(20)} ${value}\n`;
         rank++;
     }
-
-    return outputString;
-}
-
-function tableOutput(output: VersionDownloads, packageName: string) {
-    let outputString: string = '\n';
-
-    outputString += `Package: ${packageName}`;
 
     return outputString;
 }
