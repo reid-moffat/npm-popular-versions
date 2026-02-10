@@ -1,17 +1,14 @@
 const validPackages: string[] = [
     'firebase',
-    '@types/node',
     '@prisma/client',
-    'suite-metrics',
-    'generate-arrays',
-    'bias-random',
-    'typescript',
-    'firebase-tools',
-    '@microsoft/tsdoc',
-    '@changesets/cli',
+    'test-inputs',
     'fraction.js',
     'istanbul-lib-instrument',
-    'pnpm',
 ];
 
-export { validPackages };
+const invalidPackages: string[] = [
+    'ffhuilhgsruijgorsjgsjgoirdsjgldsjgos',
+    '89-x4-4=xx=xd/[-3w[wog6akr]',
+];
+
+export { validPackages, invalidPackages };
