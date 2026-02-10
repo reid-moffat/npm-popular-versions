@@ -17,7 +17,7 @@ async function main() {
 
     program
         .argument('<packageName>', 'Package name (required)')
-        .option('-n, --number <count>', 'Number of versions to output', parseInt, 10)
+        .option('-l, --limit <limit>', 'Maximum number of versions to output', parseInt, 10)
         .option('--json', 'Output JSON instead of a formatted table', false)
         .option('--simple', 'Minimal plain-text output instead of a formatted table', false)
         .option('-o, --output <file>', 'Write output to a file instead of stdout')
@@ -25,7 +25,7 @@ async function main() {
             try {
                 const inputs: CommandInputs = {
                     packageName,
-                    outputCount: options.number,
+                    outputLimit: options.limit,
                     outputJson: options.json,
                     outputSimple: options.simple,
                     outputFile: options.output,
@@ -35,7 +35,7 @@ async function main() {
 
                 const output: VersionDownloads = await getPopularVersions(
                     packageName,
-                    options.number
+                    options.limit
                 );
 
                 outputData(output, inputs);

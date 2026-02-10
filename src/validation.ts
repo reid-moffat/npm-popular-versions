@@ -15,12 +15,12 @@ function validateInputs(inputs: CommandInputs): void {
         throw new Error(`The package name must not have leading or trailing whitespace`);
     }
 
-    // Output count: Must be a positive real number
-    if (typeof inputs.outputCount !== 'number' || !Number.isInteger(inputs.outputCount)) {
+    // Output limit: Must be a positive real number
+    if (typeof inputs.outputLimit !== 'number' || !Number.isInteger(inputs.outputLimit)) {
         throw new Error(`The number of versions to output must be an integer`);
     }
 
-    if (inputs.outputCount < 1) {
+    if (inputs.outputLimit < 1) {
         throw new Error(`The number of versions to output must be at least 1`);
     }
 

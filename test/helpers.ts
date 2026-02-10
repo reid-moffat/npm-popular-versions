@@ -11,7 +11,7 @@ function runCLI(args: string): string {
 /**
  * Validates a JSON response
  */
-function validateJson(json: string, packageName: string, count: number = 10) {
+function validateJson(json: string, packageName: string, limit: number = 10) {
     expect(() => JSON.parse(json)).not.toThrow();
     const data: { package: string; topVersions: object } = JSON.parse(json);
 
@@ -27,7 +27,7 @@ function validateJson(json: string, packageName: string, count: number = 10) {
     // Entries must be below the max and semver:downloads pairs
     const entries: [string, number][] = Object.entries(topVersions);
     expect(entries.length).toBeGreaterThan(0);
-    expect(entries.length).toBeLessThanOrEqual(count);
+    expect(entries.length).toBeLessThanOrEqual(limit);
 
     const values: number[] = [];
     entries.forEach(([key, value]: [string, number]): void => {
@@ -45,10 +45,10 @@ function validateJson(json: string, packageName: string, count: number = 10) {
 /**
  * Validates the standard (table) output format
  */
-function validateStandard(output: string, packageName: string, count: number = 10) {
+function validateStandard(output: string, packageName: string, limit: number = 10) {
     const lines: string[] = output.split('\n');
 
-    // First line: Package: {packageName}, Second line: Top {count} versions (last week)
+    // First line: Package: {packageName}, Second line: Top {limit} versions (last week)
     expect(lines[0]).toBe(`Package: ${packageName}`);
     expect(lines[1]).toMatch(/^Top \d+ versions \(last week\):$/);
 
@@ -62,7 +62,7 @@ function validateStandard(output: string, packageName: string, count: number = 1
     // Row format: | {rank} | {version} | {downloads} |
     const dataRows: string[] = lines.slice(5, -1);
     expect(dataRows.length).toBeGreaterThan(0);
-    expect(dataRows.length).toBeLessThanOrEqual(count);
+    expect(dataRows.length).toBeLessThanOrEqual(limit);
 
     const values: number[] = [];
     dataRows.forEach((row: string, index: number): void => {
@@ -89,17 +89,17 @@ function validateStandard(output: string, packageName: string, count: number = 1
 /**
  * Validates the simple output format
  */
-function validateSimple(output: string, packageName: string, count: number = 10) {
+function validateSimple(output: string, packageName: string, limit: number = 10) {
     const lines: string[] = output.split('\n');
 
-    // First line: Top {count} versions of {packageName} (last week):
+    // First line: Top {limit} versions of {packageName} (last week):
     const escapedName: string = packageName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     expect(lines[0]).toMatch(new RegExp(`^Top \\d+ versions of ${escapedName} \\(last week\\):$`));
 
     // Remaining lines are version/download pairs: {version.padEnd(10)} {downloads}
     const dataLines: string[] = lines.slice(1);
     expect(dataLines.length).toBeGreaterThan(0);
-    expect(dataLines.length).toBeLessThanOrEqual(count);
+    expect(dataLines.length).toBeLessThanOrEqual(limit);
 
     const values: number[] = [];
     dataLines.forEach((line) => {

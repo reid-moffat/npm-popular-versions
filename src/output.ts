@@ -84,7 +84,7 @@ function jsonOutput(output: VersionDownloads, packageName: string) {
 function simpleOutput(output: VersionDownloads, inputs: CommandInputs) {
     let outputString: string = '';
 
-    outputString += `Top ${inputs.outputCount} versions of ${inputs.packageName} (last week):`;
+    outputString += `Top ${inputs.outputLimit} versions of ${inputs.packageName} (last week):`;
     for (const [key, value] of output) {
         outputString += `\n${key.toString().padEnd(10)} ${value}`;
     }

@@ -1,8 +1,8 @@
 import { NpmApiResponse, VersionDownloads } from './Interfaces.ts';
 
-async function getPopularVersions(packageName: string, count: number) {
+async function getPopularVersions(packageName: string, limit: number) {
     const versionData: NpmApiResponse = await getVersions(packageName);
-    return filterByPopularity(versionData.downloads, count);
+    return filterByPopularity(versionData.downloads, limit);
 }
 
 async function getVersions(packageName: string) {
@@ -25,15 +25,15 @@ async function getVersions(packageName: string) {
     }
 }
 
-function filterByPopularity(versions: { [key: string]: number }, count: number) {
+function filterByPopularity(versions: { [key: string]: number }, limit: number) {
     const entries: VersionDownloads = Object.entries(versions);
     const sorted: VersionDownloads = [];
 
     for (const entry of entries) {
         const downloads: number = entry[1];
 
-        // Skip if items == count and this one isn't bigger than the smallest
-        if (sorted.length >= count && downloads <= sorted[count - 1][1]) {
+        // Skip if items == limit and this one isn't bigger than the smallest
+        if (sorted.length >= limit && downloads <= sorted[limit - 1][1]) {
             continue;
         }
 
@@ -43,7 +43,7 @@ function filterByPopularity(versions: { [key: string]: number }, count: number) 
         }
         sorted.splice(i, 0, entry as [string, number]);
 
-        if (sorted.length > count) {
+        if (sorted.length > limit) {
             sorted.pop();
         }
     }

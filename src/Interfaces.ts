@@ -3,7 +3,7 @@
  */
 interface CommandInputs {
     packageName: string;
-    outputCount: number;
+    outputLimit: number;
     outputJson: boolean;
     outputSimple: boolean;
     outputFile: string | undefined;
