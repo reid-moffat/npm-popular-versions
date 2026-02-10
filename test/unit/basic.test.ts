@@ -3,7 +3,7 @@ import { suite, test } from 'vitest';
 import { runCLI, validateJson, validateStandard, validateSimple } from '../helpers.ts';
 import { validPackages } from '../data.ts';
 
-const delay = (): Promise<void> => setTimeout(800 + Math.random() * 700);
+const delay = (): Promise<void> => setTimeout(1100 + Math.random() * 800);
 
 suite('Basic tests (no options)', () => {
     suite('Standard output', () => {
