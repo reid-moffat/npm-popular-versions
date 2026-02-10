@@ -1,6 +1,6 @@
 import { suite, test, expect } from 'vitest';
-import { runCLI } from './helpers.ts';
-import packageJson from '../package.json' with { type: 'json' };
+import { runCLI } from '../helpers.ts';
+import packageJson from '../../package.json' with { type: 'json' };
 
 suite('Package metadata tests', () => {
     test('Package version', () => {
