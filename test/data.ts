@@ -1,10 +1,8 @@
 const validPackages: string[] = [
     'firebase',
     '@prisma/client',
-    'test-inputs',
     'fraction.js',
     'istanbul-lib-instrument',
-    'pnpm',
 ];
 
 const invalidPackages: string[] = [
