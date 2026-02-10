@@ -6,23 +6,22 @@ async function getPopularVersions(packageName: string, limit: number) {
 }
 
 async function getVersions(packageName: string) {
-    try {
-        const response: Response = await fetch(
-            `https://api.npmjs.org/versions/${packageName.replaceAll('/', '%2F')}/last-week`
-        );
+    const response: Response = await fetch(
+        `https://api.npmjs.org/versions/${packageName.replaceAll('/', '%2F')}/last-week`
+    );
 
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const versionData: NpmApiResponse = await response.json();
-
-        return versionData;
-    } catch (error: unknown) {
-        const message: string = error instanceof Error ? error.message : String(error);
-        console.error(`Error fetching package: ${message}`);
-        process.exit(1);
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
+
+    const versionData: NpmApiResponse = await response.json();
+
+    const isEmpty: boolean = Object.keys(versionData.downloads).length === 0;
+    if (isEmpty) {
+        throw new Error(`Package ${packageName} does not exist or has no downloads`);
+    }
+
+    return versionData;
 }
 
 function filterByPopularity(versions: { [key: string]: number }, limit: number) {
