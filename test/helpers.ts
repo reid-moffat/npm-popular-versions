@@ -9,6 +9,23 @@ function runCLI(args: string): string {
 }
 
 /**
+ * Runs CLI and expects it to fail, returns stderr
+ */
+function runCLIError(args: string): string {
+    try {
+        execSync(`npm-popular-versions ${args}`, {
+            encoding: 'utf-8',
+            stdio: 'pipe',
+        });
+        throw new Error('Expected CLI to fail but it succeeded');
+    } catch (error) {
+        const execError = error as { status: number; stderr: string };
+        expect(execError.status).toBe(1);
+        return execError.stderr.trim();
+    }
+}
+
+/**
  * Validates a JSON response
  */
 function validateJson(json: string, packageName: string, limit: number = 10) {
@@ -127,4 +144,4 @@ function validateSorted(downloadValues: number[]) {
     expect(downloadValues).toEqual(sortedValues);
 }
 
-export { runCLI, validateJson, validateStandard, validateSimple };
+export { runCLI, runCLIError, validateJson, validateStandard, validateSimple };

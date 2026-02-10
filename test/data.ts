@@ -4,6 +4,9 @@ const validPackages: string[] = [
     'test-inputs',
     'fraction.js',
     'istanbul-lib-instrument',
+    'firebase-tools',
+    'pnpm',
+    '@types/node',
 ];
 
 const invalidPackages: string[] = [
