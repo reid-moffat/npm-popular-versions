@@ -1,8 +1,11 @@
 # PNPM packages
 node_modules/
 
-# Generated minified package files
-dist/
+# Transpiled, minified executable
+bin/
+
+# Claude settings
+.claude/
 
 
 #
